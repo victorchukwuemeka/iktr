@@ -1,4 +1,4 @@
-# CipherOS
+# iktr
 
 A privacy-first operating system built from scratch in Rust.
 
@@ -45,10 +45,10 @@ Building this means touching real systems programming:
 
 ```bash
 # Build the bootloader
-cargo build --target x86_64-cipheros.json
+cargo build --target x86_64-iktr.json
 
 # Run in QEMU
-qemu-system-x86_64 -drive format=raw,target=read-only,file=target/cipheros.bin
+qemu-system-x86_64 -drive format=raw,target=read-only,file=target/iktr.bin
 ```
 
 ## References
