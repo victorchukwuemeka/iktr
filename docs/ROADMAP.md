@@ -1,8 +1,8 @@
 # iktr OS — Development Roadmap
 
 ## Phase 1: Boot
-- [ ] Lab 1.1 — Bootloader (BIOS int 0x10)
-- [ ] Lab 1.2 — Fix bootloader, add boot signature
+- [x] Lab 1.1 — Bootloader (BIOS int 0x10)
+- [x] Lab 1.2 — Fix bootloader, add boot signature
 - [ ] Lab 1.3 — Protected mode transition
 
 ## Phase 2: Kernel

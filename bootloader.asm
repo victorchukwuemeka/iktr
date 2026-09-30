@@ -24,16 +24,35 @@
 
 .globl _start 
 _start:
-     # BIOS loads us at 0x7C00, real mode, 16-bit
-     movw $0x0B800 %ax, # VGA buffer segment(0xB8000 = 0xB800 << 4)
-     movw %ax, %es        # for later - we use int 0x10 here instead 
+     # Clear interrupts and initialize segments
+     cli
+     xorw %ax, %ax
+     movw %ax, %ds
+     movw %ax, %es
+     movw %ax, %ss
+     movw $0x7C00, %sp
+     sti
 
      movw $msg, %si      # SI = pointer to message 
-     movb $0x0E,%ah      # AH = just print text i.e teletype output 
-     xorw %bx, %bx       #  page 0, black bg white fg
-
+     movb $0x0E, %ah     # AH = teletype output 
+     xorw %bx, %bx       # page 0, black bg white fg
 
 print_loop:
-   lodsb   
-   textb %al,%al
-   jz    
+     lodsb               # AL = [DS:SI], SI = SI + 1
+     testb %al, %al      # end of null-terminated string?
+     jz halt
+     int $0x10           # BIOS video service: print char in AL
+     jmp print_loop
+
+halt:
+     cli
+.Lhang:
+     hlt
+     jmp .Lhang
+
+msg:
+     .asciz "Booting iktr OS...\r\n"
+
+# Sector padding and boot signature (must be exactly 512 bytes)
+.fill 510 - (. - _start), 1, 0
+.byte 0x55, 0xAA

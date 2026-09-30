@@ -12,18 +12,19 @@ Boot from a 512-byte sector and print a message to screen.
 ## What We Built
 - `bootloader.asm` — prints text using BIOS int 0x10
 
-## Issues Found
-- Line 28: stray comma after %ax
-- Line 38: `textb` should be `testb`
-- Line 39: `jz` needs a label
-- No message string defined
-- No 0x55AA boot signature
+## Solutions Applied
+- Fixed segment setup (`cli`, zeroed `ax`, loaded `ds`, `es`, `ss`, set `sp` to `0x7C00`, `sti`)
+- Replaced `textb` typo with `testb %al, %al`
+- Completed teletype printing loop calling `int $0x10` and looping until null byte
+- Added infinite halt loop (`cli`, `hlt`, `jmp .Lhang`)
+- Added null-terminated message string: `"Booting iktr OS...\r\n"`
+- Added padding with `.fill 510 - (. - _start), 1, 0` and boot signature `.byte 0x55, 0xAA`
+- Verified assembled binary `boot_sector.bin` is exactly 512 bytes with `55 aa` signature
+- Created `Makefile` for streamlined building (`make build`)
 
 ## Next Steps
-- Fix the above issues
-- Pad to 512 bytes with boot signature
-- Test in QEMU
+- Lab 1.2 / 1.3: Enter 32-bit Protected Mode (disable interrupts, load GDT, enable A20, set CR0 PE bit, far jump to 32-bit code)
 
 ## Status
 - [x] Started
-- [ ] Completed
+- [x] Completed
